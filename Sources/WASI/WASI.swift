@@ -5,7 +5,13 @@ import WasmTypes
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS) || os(visionOS)
     import Darwin
 #elseif os(Linux) || os(FreeBSD) || os(Android)
+    #if canImport(Glibc)
     import Glibc
+    #elseif canImport(Musl)
+    import Musl
+    #elseif canImport(Bionic)
+    import Bionic
+    #endif
 #elseif os(Windows)
     import ucrt
 #else

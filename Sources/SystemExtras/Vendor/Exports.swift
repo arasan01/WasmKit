@@ -16,7 +16,13 @@
 import Darwin
 #elseif os(Linux) || os(FreeBSD) || os(Android)
 import CSystem
+#if canImport(Glibc)
 import Glibc
+#elseif canImport(Musl)
+import Musl
+#elseif canImport(Bionic)
+import Bionic
+#endif
 #elseif os(Windows)
 import CSystem
 import ucrt
@@ -47,10 +53,20 @@ internal var system_errno: CInt {
     _ = ucrt._set_errno(newValue)
   }
 }
-#else
+#elseif canImport(Glibc)
 internal var system_errno: CInt {
   get { Glibc.errno }
   set { Glibc.errno = newValue }
+}
+#elseif canImport(Musl)
+internal var system_errno: CInt {
+  get { Musl.errno }
+  set { Musl.errno = newValue }
+}
+#elseif canImport(Bionic)
+internal var system_errno: CInt {
+  get { Bionic.errno }
+  set { Bionic.errno = newValue }
 }
 #endif
 
